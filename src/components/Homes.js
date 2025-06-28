@@ -45,8 +45,10 @@ function Homes() {
     <TrendingProducts></TrendingProducts>
     <OfferCard></OfferCard>
     <Testimonials></Testimonials>
-    <Blogs></Blogs>
+<div className='bg-[#FFF7F0]'>
+      <Blogs></Blogs>
   <OurNewsletter></OurNewsletter>
+</div>
  
     </div>
   )

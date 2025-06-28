@@ -8,6 +8,8 @@ const nextConfig = {
       'res.cloudinary.com',
       'via.placeholder.com',
       'example.com',
+      "cdn-oubd.s3.ap-southeast-1.amazonaws.com",
+      "oneummahbd.shop",
       'i.ibb.co'
     ],
   },

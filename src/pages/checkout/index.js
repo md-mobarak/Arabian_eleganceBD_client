@@ -158,13 +158,13 @@ export default function CheckoutPage() {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-orange-50 p-6 rounded-xl shadow-lg border border-orange-100 h-fit">
+          <div className="cursor-pointer bg-orange-50 p-6 rounded-xl shadow-lg border border-orange-100 h-fit">
             <h2 className="text-3xl font-bold mb-6 text-orange-800">Order Summary</h2>
             <div className="space-y-4">
               {cartItems.map((item) => (
                 <div key={item._id} className="flex justify-between items-center bg-white p-4 rounded-lg">
                   <div>
-                    <h3 className="font-semibold text-gray-800">{item.name}</h3>
+                    <h3 className="font-semibold text-gray-800" title={item.name}>{item?.name?.slice(0,15)}</h3>
                     <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                   </div>
                   <div className="font-medium text-orange-700">

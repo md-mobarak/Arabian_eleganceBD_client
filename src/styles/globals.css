@@ -14,6 +14,13 @@ body {
    
   }
   
+  .swiper-button-next::after {
+  color: rgb(252, 112, 4);
+}
+
+.swiper-button-prev::after {
+color: rgb(252, 112, 4);
+}
  
 
  

@@ -112,6 +112,15 @@ export default function DashboardSidebar({ isOpen, toggleSidebar }) {
             {isOpen && <span className="ml-3">Online Store</span>}
           </Link>
         </li>
+        <li>
+          <Link
+            href="/dashboard/store"
+            className={`flex items-center p-3 rounded-lg ${isActive("/dashboard/store")}`}
+          >
+            <FaStore className="text-lg" />
+            {isOpen && <span className="ml-3">Online Store</span>}
+          </Link>
+        </li>
       </ul>
 
       <div className="mt-6">

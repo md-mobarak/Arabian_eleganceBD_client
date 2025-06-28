@@ -318,7 +318,7 @@ import Footer from '@/components/Footer';
 import Card from '@/components/Card';
 import { baseUrl } from '@/utils/api';
 
-const SkeletonLoader = () => (
+export const SkeletonLoader = () => (
   <div className="animate-pulse bg-white rounded-lg shadow-md overflow-hidden">
     <div className="bg-gray-200 h-64 w-full" />
     <div className="p-4 space-y-3">

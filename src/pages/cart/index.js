@@ -62,7 +62,7 @@ const router = useRouter()
         ) : (
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Cart Items */}
-            <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-orange-100">
+            <div className="cursor-pointer lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-orange-100">
               <div className="hidden md:grid grid-cols-12 gap-4 mb-4 pb-4 border-b border-orange-100">
                 <div className="col-span-6 font-semibold text-orange-800">Product</div>
                 <div className="col-span-2 font-semibold text-orange-800">Price</div>
@@ -90,7 +90,7 @@ const router = useRouter()
                       </button>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-800">{item?.name}</h3>
+                      <h3 className="font-semibold text-gray-800" title={item.name}>{item?.name?.slice(0,15)}...</h3>
                       <p className="text-sm text-gray-500">{item?.category?.name}</p>
                     </div>
                   </div>

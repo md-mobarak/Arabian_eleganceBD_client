@@ -4,7 +4,7 @@ export const API = axios.create({
   baseURL: "http://localhost:5000/api/v1/product", // 🔹 আপনার API URL দিন
 });
  
-export const baseUrl = 'https://arabian-elegance-backend.vercel.app/api/v1'
+export const baseUrl = 'https://arabian-elegance-backend2.vercel.app/api/v1'
 
 
 // export const userIdentity = axios.get({

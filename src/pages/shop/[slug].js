@@ -386,8 +386,8 @@ const ProductDetails = () => {
                        ))}
                      <span className="text-gray-700 text-sm">(80)</span>
                    </p>
-                   <p className="text-gray-600 text-2xl font-semibold">
-                     {product.title}
+                   <p className="text-gray-600 text-xl font-semibold">
+                     {product?.title?.slice(0,15)}
                    </p>
                  </div>
                  <div>

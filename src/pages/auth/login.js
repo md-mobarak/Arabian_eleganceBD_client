@@ -50,11 +50,19 @@ const api = axios.create({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 transition-all hover:shadow-3xl">
+        {/* <h1>Back to home</h1> */}
+        <button onClick={()=> router.push('/')} className='btn btn-xs bg-blue-500 rounded-4xl text-white'>Back to home
+            </button>
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome Back</h1>
           <p className="text-gray-600">Sign in to your account</p>
+        <div className='flex text-xs justify-center mt-2 '> 
+           <button className='btn btn-xs bg-orange-500 rounded-4xl text-white'>Admin</button>
+          <button className='btn btn-xs bg-orange-500 rounded-4xl text-white'>Manager</button>
+          <button className='btn btn-xs bg-orange-500 rounded-4xl text-white'>User
+            </button></div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
