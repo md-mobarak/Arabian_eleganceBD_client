@@ -183,7 +183,7 @@ const ProductDetails = () => {
 
         {/* Product Info Section */}
         <div className="space-y-6">
-          <h1 className="text-3xl font-bold text-gray-900">{product?.title}</h1>
+          <h1 className="text-xl font-bold text-gray-900">{product?.title}</h1>
           <div className="text-2xl font-semibold text-primary">
             ${product?.price}
             {product?.discount > 0 && (
@@ -265,7 +265,7 @@ const ProductDetails = () => {
           <div className="space-y-4 pt-4 border-t">
             <div className="prose max-w-none">
               <h3 className="text-lg font-medium mb-2">Description</h3>
-              <p className="text-gray-600">{product?.description}</p>
+              <p className="text-gray-600 text-xl ">{product?.description}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
