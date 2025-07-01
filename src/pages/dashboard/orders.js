@@ -9,9 +9,7 @@ const OrdersPage = () => {
   return (
 
     <DashboardLayout>
-      <h2 className="text-2xl font-bold">All Orders</h2>
       <OrderManagement></OrderManagement>
-      {/* <OrderTable></OrderTable> */}
       </DashboardLayout>
   );
 };

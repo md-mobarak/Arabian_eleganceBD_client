@@ -54,7 +54,7 @@ function WorkProcessing() {
   ];
 
   return (
-    <div className="my-16">
+    <div className="mb-20  p-4 ">
       {/* Title Section */}
       <div className="flex justify-center items-center my-5">
         <p>
@@ -65,17 +65,17 @@ function WorkProcessing() {
           <GiBeveledStar className="text-pink-700 font-bold text-xl" />
         </p>
       </div>
-      <h1 className="text-center lg:text-5xl text-2xl font-bold font-serif text-gray-700 mb-12">
+      <h1 className="text-center lg:text-5xl text-2xl font-bold font-serif text-gray-700 mb-5">
         How it Work Processing
       </h1>
 
       {/* Work Process Steps */}
       {/* <Marquee className='px-20'> */}
-      <div className="grid grid-cols-1 md:grid-cols-2 justify-center items-center lg:grid-cols-4 gap-8 lg:px-12 px-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 justify-center items-center lg:grid-cols-4 gap-8 ">
         {steps.map((step) => (
           <div
             key={step.id}
-            className="bg-white shadow-xl rounded-lg p-2 text-center hover:border-2 border-gray-600 hover:scale-105 transform transition-all duration-500"
+            className="bg-white shadow-lg rounded-lg p-2 text-center hover:border-2 border-gray-600 hover:scale-105 transform transition-all duration-500"
           >
             <div className="flex justify-center items-center mb-2">
               <div className="bg-yellow-300  text-gray-600 rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg shadow">

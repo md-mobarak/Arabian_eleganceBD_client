@@ -74,7 +74,7 @@ function HeroSection() {
   }, []);
 
   return (
-    <section className="relative h-[90vh] min-h-[600px] flex flex-col-reverse lg:flex-row items-center justify-between px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="relative h-[90vh] min-h-[600px] flex flex-col-reverse lg:flex-row items-center justify-between px-4  overflow-hidden">
       {/* Text Section */}
       <div className="hero-text w-full lg:w-1/2 max-w-xl space-y-4 sm:space-y-6 text-center lg:text-left mb-8 lg:mb-0">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">

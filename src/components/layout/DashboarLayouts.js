@@ -1,43 +1,4 @@
 
-// import { useState } from 'react';
-// import { Bell, Menu } from 'lucide-react';
-
-// import DashboardNav from './DashboardNav';
-
-
-// export default function DashboarLayouts({ children }) {
-//   const [isOpen, setIsOpen] = useState(false);
-//   return (
-//     < >
-//     <nav>
-//       {/* dashboard navabr  */}
-//       <DashboardNav></DashboardNav>
-//     </nav>
-//       <main>
-//         {children}
-//       </main>
-//     </>
-//   );
-// }
-
-
-
-// import DashboardNav from "./DashboardNav";
-// import DashboardSidebar from "./DashboardSidebar";
-
-// const DashboardLayout = ({ children }) => {
-//   return (
-//     <div className="flex">
-//       {/* <Sidebar /> */}
-//       <DashboardSidebar></DashboardSidebar>
-//       <div className="ml-64 w-full">
-//       <DashboardNav></DashboardNav>
-//         {/* <Header /> */}
-//         <main className="p-6 mt-16">{children}</main>
-//       </div>
-//     </div>
-//   );
-// };
 
 // export default DashboardLayout;
 "use client";

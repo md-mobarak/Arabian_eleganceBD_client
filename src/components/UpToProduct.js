@@ -10,7 +10,7 @@ function UpToProduct() {
   }, []);
 
   return (
-    <div className="bg-gray-50 lg:my-24 lg:p-8 flex justify-center items-center">
+    <div className="bg-gray-50 mb-20  p-4 flex justify-center items-center">
       <div className="lg:px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           {/* Card 1 */}

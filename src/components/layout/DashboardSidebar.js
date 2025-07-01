@@ -7,6 +7,7 @@ import { FaBox, FaUsers, FaClipboardList, FaCog, FaStore } from "react-icons/fa"
 import { IoIosLogOut } from "react-icons/io";
 import { FaUsersGear } from "react-icons/fa6";
 import { useRouter } from "next/router";
+import { FaUserEdit } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 export default function DashboardSidebar({ isOpen, toggleSidebar }) {
@@ -96,6 +97,16 @@ export default function DashboardSidebar({ isOpen, toggleSidebar }) {
         </li>
         <li>
           <Link
+            href="/dashboard/manageProfile"
+            className={`flex items-center p-3 rounded-lg ${isActive("/dashboard/manageProfile")}`}
+          >
+            {/* <FaStore className="text-lg" /> */}
+            <FaUserEdit   className="text-lg"/>
+            {isOpen && <span className="ml-3">Profile</span>}
+          </Link>
+        </li>
+        <li>
+          <Link
             href="/dashboard/settings"
             className={`flex items-center p-3 rounded-lg ${isActive("/dashboard/settings")}`}
           >
@@ -112,15 +123,7 @@ export default function DashboardSidebar({ isOpen, toggleSidebar }) {
             {isOpen && <span className="ml-3">Online Store</span>}
           </Link>
         </li>
-        <li>
-          <Link
-            href="/dashboard/store"
-            className={`flex items-center p-3 rounded-lg ${isActive("/dashboard/store")}`}
-          >
-            <FaStore className="text-lg" />
-            {isOpen && <span className="ml-3">Online Store</span>}
-          </Link>
-        </li>
+        
       </ul>
 
       <div className="mt-6">

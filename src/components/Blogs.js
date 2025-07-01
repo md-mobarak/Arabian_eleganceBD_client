@@ -116,8 +116,8 @@ const Blogs = () => {
   ];
 
   return (
-    <section className="bg-[#FFF7F0] py-16 ">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-10">
+    <section className="bg-[#FFF7F0] mb-20  p-4  ">
+      <div className="container mx-auto ">
         {/* Header */}
         <div className="text-center mb-12">
           <p className="text-pink-600 font-bold uppercase font-serif">Our Blog</p>

@@ -4,7 +4,7 @@ import React from 'react';
 
 function OurNewsletter() {
   return (
-    <div className="relative lg:my-20 bg-[#fff7f2] py-10 px-16 flex flex-col justify-around md:flex-row  items-center overflow-hidden">
+    <div className="relative mb-20 bg-[#fff7f2] py-10 px-16 flex flex-col justify-around md:flex-row  items-center overflow-hidden">
       {/* Background Logo */}
       <div className="absolute inset-0 bg-[url('/path-to-background-logo.png')] bg-no-repeat bg-left-top opacity-10 pointer-events-none"></div>
 

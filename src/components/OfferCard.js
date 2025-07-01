@@ -99,7 +99,7 @@ function OfferCard() {
   }, []);
 
   return (
-    <div className=" lg:px-16 py-10">
+    <div className=" mb-20  p-4 ">
       <div className="grid grid-cols-1 lg:grid-cols-2 bg-gray-100 border border-gray-300 rounded-3xl shadow-lg overflow-hidden">
         {/* Offer Text Section */}
         <section className="flex flex-col justify-center items-center bg-gradient-to-r from-gray-100 to-gray-50 p-8 lg:p-12  text-center lg:text-left">

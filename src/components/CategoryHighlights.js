@@ -64,7 +64,7 @@ function CategoryHighlights() {
   const nextRef = useRef(null);
 
   return (
-    <div className=" lg:px-20 my-12 relative px-10">
+    <div className=" px-4 mb-20  relative ">
       <div className='flex  items-center'>
           <p><GiBeveledStar className='text-pink-700 font-bold text-xl' /></p>
           <p className='font-serif font-semibold text-pink-700'>Categories</p>

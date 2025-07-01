@@ -145,13 +145,16 @@ function StylishCard() {
         setIsLoading(false);
       });
   }, []);
+// const randomArr= Math.floor(Math.random() * data?.products?.length);
+
+// console.log(randomArr);
 
   return (
-    <div className="my-8 lg:px-12 px-8">
-      <div className='grid grid-cols-2 gap-5 lg:my-16'>
+    <div className="mb-20  p-4 ">
+      <div className='grid grid-cols-2 gap-5 lg:mb-5'>
         <div className='my-5'>
           <div className='flex items-center'>
-            <GiBeveledStar className='text-pink-700 font-bold text-xl' />
+            <GiBeveledStar className='text-pink-700 font-bold text-4xl' />
             <p className='font-serif lg:font-semibold text-pink-700 ml-1'>
               Feature Products
             </p>
@@ -187,7 +190,10 @@ function StylishCard() {
         {!isLoading && !error && data?.products?.length > 0 && (
           <div className='flex justify-center items-center '>
             <div className=" grid grid-cols-1 space-y-4 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 gap-4">
-              {data?.products?.map((product, index) => (
+              {
+              
+             data?.products?.map((product, index) => (
+
                 <div key={product._id}>
                   <Card
                     product={{

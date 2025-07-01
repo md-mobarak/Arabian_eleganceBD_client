@@ -30,7 +30,7 @@ function StayingProduct() {
   ];
 
   return (
- <div className="lg:px-12">
+ <div className="px-4 mb-20  flex justify-center items-center">
      <div className="bg-white rounded-xl border border-dotted border-gray-400 lg:flex justify-evenly items-center">
       {shippingCard.map((card, index) => (
         <div key={index} className=" flex justify-between space-x-3 items-center py-8 px-5">

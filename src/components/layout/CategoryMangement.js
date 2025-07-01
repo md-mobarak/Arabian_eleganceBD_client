@@ -1,11 +1,13 @@
-
 "use client";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { confirmAlert } from "react-confirm-alert";
 import Skeleton from "react-loading-skeleton";
-import { FaEdit, FaTrash, FaSearch, FaPlus, FaEye } from "react-icons/fa";
+import { 
+  FaEdit, FaTrash, FaSearch, FaPlus, FaEye, 
+  FaTimes, FaSave, FaImage, FaInfoCircle
+} from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -19,6 +21,7 @@ const CategoryManagement = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [imagePreviews, setImagePreviews] = useState([]);
   const limit = 10;
 
   // Authentication State
@@ -55,6 +58,13 @@ const CategoryManagement = () => {
     }
   });
 
+  // Handle image previews
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImagePreviews(previews);
+  };
+
   // Create/Update Category Mutation
   const categoryMutation = useMutation({
     mutationFn: async ({ id, formData, existingImages }) => {
@@ -71,8 +81,10 @@ const CategoryManagement = () => {
 
       // Handle image uploads
       let imageUrls = [];
-      if (imageFiles.length > 0) {
+      if (imageFiles.length > 0 && imageFiles[0].size > 0) {
         const uploadPromises = Array.from(imageFiles).map(async (file) => {
+          if (file.size === 0) return null; // Skip empty files
+          
           const uploadData = new FormData();
           uploadData.append("image", file);
           const res = await fetch(
@@ -82,7 +94,7 @@ const CategoryManagement = () => {
           const json = await res.json();
           return json.data.url;
         });
-        imageUrls = await Promise.all(uploadPromises);
+        imageUrls = (await Promise.all(uploadPromises)).filter(url => url !== null);
       }
 
       // Combine with existing images if updating
@@ -111,6 +123,7 @@ const CategoryManagement = () => {
       queryClient.invalidateQueries(["categories"]);
       toast.success(`Category ${selectedCategory ? "updated" : "created"} successfully`);
       setIsEditModalOpen(false);
+      setImagePreviews([]);
     },
     onError: (error) => {
       toast.error(error.message === "Unauthorized" ? "Login expired!" : "Operation failed");
@@ -124,18 +137,14 @@ const CategoryManagement = () => {
         method: "DELETE",
         headers: getHeaders()
       });
-      console.log(res,id)
       if (res.status === 401) throw new Error("Unauthorized");
       return res.json();
-   
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["categories"]);
       toast.success("Category deleted successfully");
-      console.log(toast)
     },
     onError: (error) => {
-      console.log(error)
       toast.error(error.message === "Unauthorized" ? "Login expired!" : "Delete failed");
     }
   });
@@ -152,31 +161,40 @@ const CategoryManagement = () => {
       title: "Confirm Delete",
       message: "Are you sure? This will also delete all subcategories!",
       buttons: [
-        { label: "Yes", onClick: () => deleteMutation.mutate(id) },
-        { label: "No" }
-      ]
+        { 
+          label: "Delete", 
+          className: "bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded mr-2",
+          onClick: () => deleteMutation.mutate(id) 
+        },
+        { 
+          label: "Cancel",
+          className: "bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded"
+        }
+      ],
+      overlayClassName: "backdrop-blur-sm"
     });
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Category Management</h1>
-        <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <h1 className="text-2xl font-bold text-gray-800">Category Management</h1>
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={resetFilters}
-            className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg flex items-center gap-2"
+            className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg flex items-center gap-2 text-gray-700 transition-colors"
           >
-            <RxCross2 /> Reset Filters
+            <FaTimes className="text-sm" /> Reset Filters
           </button>
           {["admin", "manager"].includes(authData.userRole) && (
             <button
               onClick={() => {
                 setSelectedCategory(null);
+                setImagePreviews([]);
                 setIsEditModalOpen(true);
               }}
-              className="bg-green-500 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center gap-2"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
             >
               <FaPlus /> New Category
             </button>
@@ -185,82 +203,98 @@ const CategoryManagement = () => {
       </div>
 
       {/* Filters Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 gap-4 mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
         <div className="relative">
           <input
             type="text"
-            placeholder="Search categories..."
+            placeholder="Search categories by name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-lg"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
           />
-          <FaSearch className="absolute left-3 top-3 text-gray-400" />
+          <FaSearch className="absolute left-3 top-3.5 text-gray-400" />
         </div>
       </div>
 
       {/* Categories Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-xl shadow overflow-hidden border border-gray-100">
         {isLoading ? (
-          [...Array(5)].map((_, i) => (
-            <div key={i} className="p-4 border-b">
-              <Skeleton height={30} count={4} />
-            </div>
-          ))
+          <div className="p-6">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="mb-4">
+                <Skeleton height={60} />
+              </div>
+            ))}
+          </div>
         ) : isError ? (
-          <div className="p-6 text-red-500">Error loading categories</div>
+          <div className="p-8 text-center">
+            <div className="text-red-500 text-lg mb-2">Error loading categories</div>
+            <p className="text-gray-600">Please try again later</p>
+          </div>
+        ) : data?.categories?.length === 0 ? (
+          <div className="p-8 text-center">
+            <div className="text-gray-500 text-lg mb-2">No categories found</div>
+            <p className="text-gray-600">Try adjusting your search or create a new category</p>
+          </div>
         ) : (
           <>
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left">Name</th>
-                  <th className="px-6 py-3 text-left">Slug</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                  <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {data?.categories?.map((category) => (
-                  <tr key={category._id}>
+                  <tr key={category._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        {category.images?.[0] && (
+                      <div className="flex items-center gap-3">
+                        {category.images?.[0] ? (
                           <Image
                             src={category.images[0]}
                             alt={category.name}
-                            className="w-10 h-10 object-cover rounded-full"
-                            width={600}
-                            height={400}
+                            className="w-10 h-10 object-cover rounded-lg"
+                            width={40}
+                            height={40}
                           />
+                        ) : (
+                          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10" />
                         )}
-                        <span className="font-medium">{category.name}</span>
+                        <span className="font-medium text-gray-900">{category.name}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">{category.slug}</td>
-                    <td className="px-6 py-4 space-x-2">
+                    <td className="px-6 py-4 text-gray-600">{category.slug}</td>
+                    <td className="px-6 py-4 text-right space-x-3">
                       <button
                         onClick={() => {
                           setSelectedCategory(category);
                           setIsViewModalOpen(true);
                         }}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-orange-500 hover:text-orange-700 p-2 rounded-full hover:bg-orange-50 transition-colors"
+                        title="View Details"
                       >
-                        <FaEye className="text-xl" />
+                        <FaEye className="text-lg" />
                       </button>
                       <button
                         onClick={() => {
                           setSelectedCategory(category);
+                          setImagePreviews([]);
                           setIsEditModalOpen(true);
                         }}
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-black hover:text-gray-800 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                        title="Edit Category"
                       >
-                        <FaEdit className="text-xl"/>
+                        <FaEdit className="text-lg"/>
                       </button>
                       {["admin", "manager"].includes(authData.userRole) && (
                         <button
                           onClick={() => handleDelete(category._id)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-800 p-2 rounded-full hover:bg-red-50 transition-colors"
+                          title="Delete Category"
                         >
-                          <FaTrash className="text-xl"/>
+                          <FaTrash className="text-lg"/>
                         </button>
                       )}
                     </td>
@@ -270,25 +304,27 @@ const CategoryManagement = () => {
             </table>
 
             {/* Pagination */}
-            <div className="flex justify-between items-center px-6 py-4 border-t">
-              <span className="text-sm text-gray-700">
+            <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 border-t bg-gray-50">
+              <span className="text-sm text-gray-700 mb-2 md:mb-0">
                 Showing {data?.categories?.length} of {data?.totalCategories} categories
               </span>
               <div className="flex gap-2">
                 <button
                   onClick={() => setPage(p => Math.max(p - 1, 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 border rounded-md disabled:opacity-50"
+                  className="px-4 py-2 border border-gray-300 rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors flex items-center gap-2"
                 >
-                  Previous
+                  <span>Previous</span>
                 </button>
-                <span className="px-4 py-2">Page {page}</span>
+                <div className="px-4 py-2 bg-orange-50 text-orange-600 rounded-md font-medium">
+                  Page {page} of {data?.totalPages}
+                </div>
                 <button
                   onClick={() => setPage(p => p + 1)}
                   disabled={page >= data?.totalPages}
-                  className="px-4 py-2 border rounded-md disabled:opacity-50"
+                  className="px-4 py-2 border border-gray-300 rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors flex items-center gap-2"
                 >
-                  Next
+                  <span>Next</span>
                 </button>
               </div>
             </div>
@@ -298,17 +334,17 @@ const CategoryManagement = () => {
 
       {/* Edit Category Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-opacity">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-gray-200 px-6 py-4 sticky top-0 bg-white z-10">
+              <h3 className="text-xl font-bold text-gray-800">
                 {selectedCategory ? "Edit Category" : "Create Category"}
               </h3>
               <button 
                 onClick={() => setIsEditModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors"
               >
-                <RxCross2 className="text-2xl" />
+                <RxCross2 className="text-xl" />
               </button>
             </div>
             
@@ -323,75 +359,127 @@ const CategoryManagement = () => {
                   existingImages: existingImages
                 });
               }}
-              className="space-y-4"
+              className="space-y-4 p-6"
             >
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Category Name*</label>
                   <input
                     name="name"
                     defaultValue={selectedCategory?.name}
-                    className="w-full p-2 border rounded"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     required
+                    placeholder="Enter category name"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Slug</label>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Slug*</label>
                   <input
                     name="slug"
                     defaultValue={selectedCategory?.slug}
-                    className="w-full p-2 border rounded"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     required
+                    placeholder="Enter unique slug"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700">Description</label>
                 <textarea
                   name="description"
                   defaultValue={selectedCategory?.description}
-                  className="w-full p-2 border rounded"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   rows="3"
+                  placeholder="Add a description for this category"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Images</label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {selectedCategory?.images?.map((img, index) => (
-                    <Image
-                      key={index}
-                      src={img}
-                      alt={`Category image ${index + 1}`}
-                      className="w-20 h-20 object-cover rounded"
-                      width={100}
-                      height={100}
+                <label className="block text-sm font-medium mb-2 text-gray-700">
+                  Category Images
+                </label>
+                
+                {/* Existing Images */}
+                {selectedCategory?.images?.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-sm text-gray-600 mb-2">Existing Images:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCategory.images.map((img, index) => (
+                        <Image
+                          key={index}
+                          src={img}
+                          alt={`Category image ${index + 1}`}
+                          className="w-20 h-20 object-cover rounded-lg"
+                          width={80}
+                          height={80}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* New Image Previews */}
+                {imagePreviews.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-sm text-gray-600 mb-2">New Images:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {imagePreviews.map((preview, index) => (
+                        <Image
+                          key={index}
+                          src={preview}
+                          alt={`Preview ${index + 1}`}
+                          className="w-20 h-20 object-cover rounded-lg"
+                          width={80}
+                          height={80}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="flex items-center justify-center w-full">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <FaImage className="w-8 h-8 mb-3 text-gray-400" />
+                      <p className="mb-2 text-sm text-gray-500">
+                        <span className="font-semibold">Click to upload</span> or drag and drop
+                      </p>
+                      <p className="text-xs text-gray-500">PNG, JPG, GIF (MAX. 5MB)</p>
+                    </div>
+                    <input 
+                      type="file" 
+                      name="images" 
+                      multiple 
+                      className="hidden" 
+                      onChange={handleImageChange}
                     />
-                  ))}
+                  </label>
                 </div>
-                <input
-                  type="file"
-                  name="images"
-                  multiple
-                  className="w-full p-2 border rounded"
-                />
               </div>
 
-              <div className="flex justify-end gap-2 mt-6">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 border rounded hover:bg-gray-50"
+                  className="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="px-5 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
+                  disabled={categoryMutation.isLoading}
                 >
-                  {selectedCategory ? "Update Category" : "Create Category"}
+                  {categoryMutation.isLoading ? (
+                    <span>Saving...</span>
+                  ) : (
+                    <>
+                      <FaSave />
+                      <span>{selectedCategory ? "Update Category" : "Create Category"}</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -401,51 +489,68 @@ const CategoryManagement = () => {
 
       {/* View Category Modal */}
       {isViewModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">Category Details</h3>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-opacity">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-gray-200 px-6 py-4 sticky top-0 bg-white z-10">
+              <h3 className="text-xl font-bold text-gray-800">Category Details</h3>
               <button 
                 onClick={() => setIsViewModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors"
               >
-                <RxCross2 className="text-2xl" />
+                <RxCross2 className="text-xl" />
               </button>
             </div>
             
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
-                  <p className="p-2 bg-gray-100 rounded">{selectedCategory?.name}</p>
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 gap-6">
+                <div className="bg-white p-5 rounded-xl border border-gray-200">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-orange-100 p-3 rounded-full">
+                      <FaInfoCircle className="text-orange-500 text-xl" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-800">Category Information</h4>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">Name</p>
+                      <p className="font-medium text-gray-900">{selectedCategory?.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">Slug</p>
+                      <p className="font-medium text-gray-900">{selectedCategory?.slug}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">Description</p>
+                      <p className="font-medium text-gray-900">
+                        {selectedCategory?.description || "No description"}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Slug</label>
-                  <p className="p-2 bg-gray-100 rounded">{selectedCategory?.slug}</p>
-                </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
-                <p className="p-2 bg-gray-100 rounded whitespace-pre-line">
-                  {selectedCategory?.description || "No description"}
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Images</label>
-                <div className="flex flex-wrap gap-4">
-                  {selectedCategory?.images?.map((img, index) => (
-                    <Image
-                      key={index}
-                      src={img}
-                      alt={`Category image ${index + 1}`}
-                      className="w-32 h-32 object-cover rounded-lg"
-                      width={128}
-                      height={128}
-                    />
-                  ))}
-                </div>
+                {selectedCategory?.images?.length > 0 && (
+                  <div className="bg-white p-5 rounded-xl border border-gray-200">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-orange-100 p-3 rounded-full">
+                        <FaImage className="text-orange-500 text-xl" />
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-800">Category Images</h4>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {selectedCategory.images.map((img, index) => (
+                        <div key={index} className="aspect-square overflow-hidden rounded-lg">
+                          <Image
+                            src={img}
+                            alt={`Category image ${index + 1}`}
+                            className="w-full h-full object-cover"
+                            width={200}
+                            height={200}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

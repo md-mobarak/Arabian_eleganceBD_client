@@ -75,7 +75,7 @@ function TrendingProducts() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   return (
-    <div className="lg:my-20 my-10 lg:px-20 px-10">
+    <div className="mb-20  p-4 ">
       {/* 1st section */}
       <div className="relative">
          {/* <p className="text-xl font-semibold text-pink-600"> <GiBeveledStar className="text-lg text-geen-500 px-2" /> Categories</p> */}
@@ -133,7 +133,7 @@ function TrendingProducts() {
             slidesPerView: 2,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
         }}
         className="mySwiper my-10"
@@ -142,7 +142,7 @@ function TrendingProducts() {
 
         {trendingProducts.map((product, index) => (
              <SwiperSlide key={index}>
-          <div key={product.id} className="p-3 rounded-3xl cursor-pointer">
+          <div key={product.id} className="p-3 bg-white rounded-3xl cursor-pointer">
             <section>
               <img
                 className=" z-50 rounded-[40px] p-4 w-full h-full"

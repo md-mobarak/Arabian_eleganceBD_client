@@ -61,7 +61,7 @@ function Testimonials() {
   const nextRef = useRef(null);
 
   return (
-    <div className="flex flex-col  my-20 lg:flex-row lg:pt-10 px-6">
+    <div className="flex flex-col mb-20  p-4  lg:flex-row ">
       {/* Text & Navigation Buttons Section (30%) */}
       <section className="lg:w-3/12 w-full lg:pr-8 mb-8 lg:mb-0 flex flex-col justify-between">
         {/* Header */}
@@ -124,7 +124,7 @@ function Testimonials() {
         >
           {userReviews.map((review, index) => (
             <SwiperSlide key={index}>
-              <div className="relative border-2 border-gray-600 rounded-2xl p-6 max-w-sm mx-auto shadow-lg">
+              <div className="relative bg-white border-2 border-gray-600 rounded-2xl p-6 max-w-sm mx-auto shadow-lg">
                 {/* Review Content */}
                 <p className="text-gray-600 mb-6" title={review.description}>{review.description.slice(0,50)}</p>
 
