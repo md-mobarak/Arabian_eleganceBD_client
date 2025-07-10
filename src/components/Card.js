@@ -243,6 +243,7 @@ function Card({ product, index,id }) {
             alt={product?.title}
             layout="fill"
             objectFit="cover"
+             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="transition-transform duration-500"
             placeholder="blur"
             blurDataURL="/placeholder-image.jpg"

@@ -16,14 +16,14 @@ import "swiper/css/navigation";
 
 function TrendingProducts() {
   const trendingProducts = [
-    {
+  {
       id: 1,
-      name: "Stylish Jacket",
-      price: "$49.99",
-      oldPrice: "$69.99",
-      discount: "30% OFF",
-      rating: 4.7,
-      img: "https://html.pixelfit.agency/pesco/assets/images/products/trending-product-1.png",
+      name: "Classic Watch",
+      price: "$99.99",
+      oldPrice: "$129.99",
+      discount: "35% OFF",
+      rating: 4.8,
+      img: "https://html.pixelfit.agency/pesco/assets/images/products/trending-product-4.png",
     },
     {
       id: 2,
@@ -43,14 +43,15 @@ function TrendingProducts() {
       rating: 4.6,
       img: "https://html.pixelfit.agency/pesco/assets/images/products/trending-product-3.png",
     },
-    {
+   
+     {
       id: 4,
-      name: "Classic Watch",
-      price: "$99.99",
-      oldPrice: "$129.99",
-      discount: "35% OFF",
-      rating: 4.8,
-      img: "https://html.pixelfit.agency/pesco/assets/images/products/trending-product-4.png",
+      name: "Stylish Jacket",
+      price: "$49.99",
+      oldPrice: "$69.99",
+      discount: "30% OFF",
+      rating: 4.7,
+      img: "https://html.pixelfit.agency/pesco/assets/images/products/trending-product-1.png",
     },
     {
       id: 5,

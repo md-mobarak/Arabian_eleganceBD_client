@@ -505,7 +505,7 @@ const Shop = () => {
           <div className="flex gap-8">
             {/* Filter Sidebar */}
             <aside
-              className={`w-64 bg-white rounded-lg shadow-lg p-6 transform transition-transform duration-300 fixed lg:static lg:translate-x-0 z-40 h-[calc(100vh-4rem)] lg:h-auto overflow-y-auto ${
+              className={`w-64 bg-white rounded-lg shadow-lg p-6 transform transition-transform duration-300 fixed lg:static lg:translate-x-0 z-40 lg:z-0 h-[calc(100vh-4rem)] lg:h-auto overflow-y-auto ${
                 isFilterOpen ? 'translate-x-0' : '-translate-x-full'
               }`}
             >

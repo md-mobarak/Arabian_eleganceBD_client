@@ -60,14 +60,16 @@ function LoginPage() {
     try {
       setLoading(true);
       const response = await api.post('https://arabian-elegance-backend2.vercel.app/api/v1/auth/login', data);
-
+      // console.log(response)
       localStorage.setItem('accessToken', response.data.accessToken);
       document.cookie = `refreshToken=${response.data.refreshToken}; path=/; secure; sameSite=strict`;
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
 
+      // localStorage.setItem('user', response.data.user);
       localStorage.setItem('userRole', response.data.user.role);
-      localStorage.setItem('userId', response.data.user._id);
-
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('userId', response.data.user.id);
+ 
       const redirectPath = response.data.user.role === 'admin' 
         ? '/dashboard' 
         : response.data.user.role === 'manager'
